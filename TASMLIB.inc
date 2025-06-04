@@ -1,5 +1,3 @@
-
-
 NEWLINE MACRO 
     push ax
     push dx
@@ -12,14 +10,27 @@ NEWLINE MACRO
     pop ax
 ENDM
 
-PRINTC MACRO char
-    mov ah, 0Eh
-    mov al, char
+PRINTXYC MACRO xpos, ypos, charac
+    push ax
+    push bx
+    push dx
+    mov ah, 02h         ; Función: mover cursor
+    mov bh, 0           ; Página 0
+    mov dh, ypos        ; Fila (y)
+    mov dl, xpos        ; Columna (x)
     int 10h
+    mov ah, 0Eh         ; Función: imprimir carácter
+    mov al, charac
+    int 10h
+    pop dx
+    pop bx
+    pop ax
 ENDM
 
-PrintStr MACRO ptr
-    mov ah, 09h
-    mov dx, ptr
-    int 21h
+SETVIDEOMODE MACRO modo
+    push ax
+    mov ah, 00h
+    mov al, modo
+    int 10h
+    pop ax
 ENDM
