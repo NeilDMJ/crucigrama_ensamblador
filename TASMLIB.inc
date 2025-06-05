@@ -1,36 +1,27 @@
-NEWLINE MACRO 
+SET_BACKGROUND_COLOR_13H MACRO color
     push ax
-    push dx
-    mov ah, 02h
-    mov dl, 0Dh                         
-    int 21h
-    mov dl, 0Ah         
-    int 21h
-    pop dx
+    push es
+    push di
+    push cx
+
+    mov ax, 0A000h      ; segmento de video modo 13h
+    mov es, ax
+    xor di, di          ; offset 0
+    mov al, color       ; color de fondo (0-255)
+    mov cx, 64000       ; 320*200 píxeles
+    rep stosb           ; llena la pantalla
+
+    pop cx
+    pop di
+    pop es
     pop ax
 ENDM
 
-PRINTXYC MACRO xpos, ypos, charac
-    push ax
-    push bx
-    push dx
-    mov ah, 02h         ; Función: mover cursor
-    mov bh, 0           ; Página 0
-    mov dh, ypos        ; Fila (y)
-    mov dl, xpos        ; Columna (x)
-    int 10h
-    mov ah, 0Eh         ; Función: imprimir carácter
-    mov al, charac
-    int 10h
-    pop dx
-    pop bx
-    pop ax
-ENDM
-
-SETVIDEOMODE MACRO modo
+SET_VIDEO_MODE MACRO modo
     push ax
     mov ah, 00h
     mov al, modo
     int 10h
     pop ax
 ENDM
+
