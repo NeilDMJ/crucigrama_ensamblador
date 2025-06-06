@@ -19,7 +19,7 @@ start:
     ; Cambiar a modo gr?fico 13h
     SET_VIDEO_MODE 13h
     
-    SET_BACKGROUND_COLOR_13H 3
+    SET_BACKGROUND_COLOR_12h 12
     
     mov si, X_inicial  ; Coordenada X inicial
     mov di, Y_inicial  ; Coordenada Y inicial
@@ -129,10 +129,36 @@ dibujarRectangulo endp
 
 putpixel proc
     push ax bx cx dx
-    mov ah, 0Ch
-    mov al, 15     ; color blanco
-    mov bh, 0
-    int 10h
+
+    mov ax, 0A000h
+    mov es, ax
+
+    mov bx, dx         ; Y
+    mov ax, bx
+    shl ax, 6          ; Y*64
+    shl bx, 8          ; Y*256
+    add ax, bx         ; Y*320
+    add ax, cx         ; X
+    mov bx, ax         ; BX = offset en píxeles
+
+    mov si, bx
+    shr si, 1          ; SI = offset en bytes
+
+    mov al, 0Fh        ; color (puedes cambiarlo)
+    test bx, 1
+    jz even_pixel
+    ; Odd pixel: high nibble
+    mov ah, es:[si]
+    mov es:[si], al
+    jmp fin_pixel
+even_pixel:
+    ; Even pixel: low nibble
+    mov ah, [es:si]
+    and ah, 0F0h
+    or al, ah
+    mov [es:si], al
+fin_pixel:
+
     pop dx cx bx ax
     ret
 putpixel endp

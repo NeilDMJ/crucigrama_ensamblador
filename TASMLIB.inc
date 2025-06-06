@@ -1,15 +1,17 @@
-SET_BACKGROUND_COLOR_13H MACRO color
+SET_BACKGROUND_COLOR_12H MACRO color
     push ax
     push es
     push di
     push cx
 
-    mov ax, 0A000h      ; segmento de video modo 13h
+    mov ax, 0A000h
     mov es, ax
-    xor di, di          ; offset 0
-    mov al, color       ; color de fondo (0-255)
-    mov cx, 64000       ; 320*200 píxeles
-    rep stosb           ; llena la pantalla
+    xor di, di
+    mov al, color
+    shl al, 4
+    or al, color       ; AL = color en ambos nibbles
+    mov cx, 38400      ; 640*480/2 bytes
+    rep stosb
 
     pop cx
     pop di
@@ -24,4 +26,3 @@ SET_VIDEO_MODE MACRO modo
     int 10h
     pop ax
 ENDM
-
