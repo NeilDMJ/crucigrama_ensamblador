@@ -124,4 +124,5 @@ EXIT:
     POP BX DX AX 
     RET 
 PAINT_RECT ENDP
+;------------------------------------
 END CRUCIGRAMA
