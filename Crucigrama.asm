@@ -1,25 +1,53 @@
-INCLUDE lib.inc
-
-.model small
-.stack 100h
-.data
-cols    equ 11       ; columnas
-rows    equ 9       ; filas
-cellW   equ 15       ; ancho de celda
-cellH   equ 15       ; alto de celda
-X_inicial equ 0
-Y_inicial equ 0
-ancho equ 135 
-
-.code
-start:
+;-----------------------------------
+;           CRUCIGRAMA 
+;-----------------------------------
+INCLUDE TASMLIB.INC 
+.MODEL SMALL
+.STACK 120H
+;-----------------------------------
+;           ZONA DE DATOS 
+;-----------------------------------
+.DATA 
+;-----------------------------------
+;  ZONA DE DATOS PARA EL CRUCIGRAMA
+;-----------------------------------
+    cols       equ 11       ; columnas
+    rows       equ 9        ; filas
+    cellW      equ 15       ; ancho de celda
+    cellH      equ 15       ; alto de celda
+    X_inicial  equ 0
+    Y_inicial  equ 0
+    ancho      equ 135  
+;-----------------------------------
+;               MENU 
+;-----------------------------------   
+    MSGMENU    DB 'MENU$'                                        
+    MSGSTART   DB 'START CRUCIGRAMA$'
+    MSGF1      DB 'F1 $'
+    MSGF2      DB 'F2 $'
+    MSGF3      DB 'F3 $'
+    MSGEND     DB 'END CRUCIGRAMA$'
+;-----------------------------------
+; ZONA DE DATOS PARA DIBUJAR LINEAS
+;-----------------------------------
+    PosicionX  DW 0
+    PosicionY  DW 0
+    PosicionY2 DW 70 
+    PosicionX2 DW 0
+    colorFondo DB 3            ; AZUL CLARO 
+    colorLinea DB 8           ; GRIS MEDIO
+.CODE
+;-----------------------------------
+;           ZONA DE CODIGO
+;-----------------------------------
+CRUCIGRAMA PROC FAR
     mov ax, @data
     mov ds, ax
 
     ; Cambiar a modo gr?fico 13h
     SET_VIDEO_MODE 13h
     
-    SET_BACKGROUND_COLOR_12h 12
+    SET_BACKGROUND_COLOR_13H 3
     
     mov si, X_inicial  ; Coordenada X inicial
     mov di, Y_inicial  ; Coordenada Y inicial
@@ -129,36 +157,10 @@ dibujarRectangulo endp
 
 putpixel proc
     push ax bx cx dx
-
-    mov ax, 0A000h
-    mov es, ax
-
-    mov bx, dx         ; Y
-    mov ax, bx
-    shl ax, 6          ; Y*64
-    shl bx, 8          ; Y*256
-    add ax, bx         ; Y*320
-    add ax, cx         ; X
-    mov bx, ax         ; BX = offset en píxeles
-
-    mov si, bx
-    shr si, 1          ; SI = offset en bytes
-
-    mov al, 0Fh        ; color (puedes cambiarlo)
-    test bx, 1
-    jz even_pixel
-    ; Odd pixel: high nibble
-    mov ah, es:[si]
-    mov es:[si], al
-    jmp fin_pixel
-even_pixel:
-    ; Even pixel: low nibble
-    mov ah, [es:si]
-    and ah, 0F0h
-    or al, ah
-    mov [es:si], al
-fin_pixel:
-
+    mov ah, 0Ch
+    mov al, 15     ; color blanco
+    mov bh, 0
+    int 10h
     pop dx cx bx ax
     ret
 putpixel endp
