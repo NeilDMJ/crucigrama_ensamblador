@@ -26,7 +26,6 @@ INCLUDE TASMLIB.INC
     MSGF1      DB 'F1 $'
     MSGF2      DB 'F2 $'
     MSGEND     DB 'END CRUCIGRAMA$'
-    MSGNUM     DB 'Press F1 to start, F2 to exit$'
 ;-----------------------------------
 ; ZONA DE DATOS PARA DIBUJAR LINEAS
 ;-----------------------------------
