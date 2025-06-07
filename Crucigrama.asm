@@ -1,4 +1,4 @@
-INCLUDE lib.inc
+INCLUDE TASMLIB.inc
 
 .model small
 .stack 100h
