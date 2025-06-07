@@ -28,6 +28,9 @@ INCLUDE TASMLIB.inc
     MSGESC     DB 'ESC$'
     MSGEND     DB 'END CRUCIGRAMA$'
     INSTRUC    DB "Presiona 1-5 para seleccionar la palabra$"
+    ERRORW     DB 'La palabra es incorrecta prueba con algo diferente$'
+    SPACES     DB '                                                   $'
+    READWORD   DB 'Introduce la palabra:$'
     
     ; Posiciones para cada texto
     menuX      dw 15
@@ -40,6 +43,7 @@ INCLUDE TASMLIB.inc
     endY       dw 180
     f2X        dw 410
     f2Y        dw 180
+    same       db 0
     
     ; Pistas
     P_POLICIA  DB '4. Protege a la comunidad y hace cumplir la ley$'
@@ -83,40 +87,76 @@ espera:
     jmp espera
 
 caso_1:
+    PRINT_STRING 8,20,SPACES, 5
     CALL DIBUJAR_CRUCIGRAMA
     CALL SELECCIONAR_1
-    LEER_CADENA_ENTER buffer_1, 10
-    COMPARE_FILA 0, buffer_1  
+    PRINT_STRING 8,20,READWORD,14
+    LEER_CADENA_ENTER buffer_1, 10 
+    COMPARE_FILA 0, buffer_1
     cmp al,1
     jne salir
     CALL colocar_musico
+    JMP espera
 salir:
-    jmp espera
-
+    jmp print_error
 caso_2:
+    PRINT_STRING 8,20,SPACES, 5
     CALL DIBUJAR_CRUCIGRAMA
     CALL SELECCIONAR_2
+    PRINT_STRING 8,20,READWORD,14
     LEER_CADENA_ENTER buffer_2, 10
-    COMPARE_FILA 1, buffer_2  
+    COMPARE_FILA 1, buffer_2
     cmp al,1
     jne salir_1
     CALL colocar_doctor
+    JMP espera
 salir_1:
-    jmp espera
+    jmp print_error
 
 caso_3:
+    PRINT_STRING 8,20,SPACES, 5
     CALL DIBUJAR_CRUCIGRAMA
     CALL SELECCIONAR_3
+    PRINT_STRING 8,20,READWORD,14
+    LEER_CADENA_ENTER buffer_3, 10
+    COMPARE_FILA 2, buffer_3
+    cmp al,1
+    jne salir_2
+    CALL colocar_pintor
     jmp espera
-    
+salir_2:
+    jmp print_error 
+
 caso_4:
+    PRINT_STRING 8,20,SPACES, 5
     CALL DIBUJAR_CRUCIGRAMA
     CALL SELECCIONAR_4
+    PRINT_STRING 8,20,READWORD,14
+    LEER_CADENA_ENTER buffer_4, 10
+    COMPARE_FILA 3, buffer_4
+    cmp al,1
+    jne salir_3
+    CALL colocar_policia
     jmp espera
-   
+salir_3:
+    jmp print_error
+
 caso_5:
+    PRINT_STRING 8,20,SPACES, 5
     CALL DIBUJAR_CRUCIGRAMA
     CALL SELECCIONAR_5
+    PRINT_STRING 8,20,READWORD,14
+    LEER_CADENA_ENTER buffer_5, 10
+    COMPARE_FILA 4, buffer_5
+    cmp al,1
+    jne salir_4
+    CALL colocar_chef
+    jmp espera
+salir_4:
+    jmp print_error
+    
+print_error:
+    PRINT_STRING 8,20,ERRORW, 5
     jmp espera
 
 fin_programa:
