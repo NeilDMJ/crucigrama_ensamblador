@@ -1,4 +1,4 @@
-; LIB.INC - Biblioteca de macros para modo gr?fico 8086 (con loops locales)
+; TASMLIB.INC - Biblioteca de macros para modo grafico 8086
 ; =====================================================
 
 ;--------------------------------------------------------------
