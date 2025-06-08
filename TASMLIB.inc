@@ -368,24 +368,19 @@ COMPARE_FILA MACRO n, cadena
     LOCAL comparar, fin, no_igual, espacio, igual
 
     ; Cargar dirección base de PALABRAS
-    push ax
-    push bx
-    push si
-    push di
+    mov si, OFFSET PALABRAS
+    mov ax, n
+    mov bx, 8            ; Cambiado de 7 a 8 (longitud correcta de cada fila)
+    mul bx               ; AX = n * 8
+    add si, ax           ; SI apunta al inicio de la fila n
 
-    lea si, PALABRAS       ; SI = inicio de PALABRAS
-    mov ax, n              ; AX = índice de fila
-    mov bx, 8              ; Cada palabra ocupa 8 bytes (7 letras + espacio o null)
-    mul bx                 ; AX = n * 8
-    add si, ax             ; SI apunta al inicio de la fila n
-
-    lea di, cadena         ; DI apunta a la cadena proporcionada
+    mov di, OFFSET cadena
 
 comparar:
-    mov al, [si]           ; Caracter de PALABRAS
-    mov ah, [di]           ; Caracter de cadena
+    mov al, [si]
+    mov ah, [di]
 
-    ; Si ambos terminan con espacio y '$', entonces son iguales
+    ; Si ambos terminan, son iguales
     cmp al, ' '
     je espacio
     cmp ah, '$'
@@ -399,26 +394,23 @@ comparar:
     jmp comparar
 
 espacio:
-    ; Verificar que ambos terminaron correctamente
+    ; Verificar que ambos terminaron al mismo tiempo
     cmp al, ' '
     jne no_igual
     cmp ah, '$'
     jne no_igual
 
 igual:
-    mov al, 1              ; Indicar que son iguales
+    
+    mov al, 1        ; iguales
     jmp fin
 
 no_igual:
-    mov al, 0              ; Indicar que son diferentes
+    
+    mov al, 0        ; diferentes
 
 fin:
-    ; Resultado queda en AL (1 = iguales, 0 = distintos)
-    pop di
-    pop si
-    pop bx
-    pop ax
-ENDM
+ENDM   
 
 
 LEER_CADENA_ENTER MACRO etiqueta_buffer, maximo
