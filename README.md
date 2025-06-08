@@ -9,3 +9,10 @@
 | `PRINT_STRING row, col, msg, color` | Imprime una cadena de texto (`msg`) en modo texto en la posición `(row, col)` con color `color`. Utiliza `INT 10h` para posicionar y `INT 21h` para imprimir. |
 | `PRINT_CHAR row, col, char, color` | Imprime un carácter ASCII (`char`) en la posición de texto `(row, col)` con el color de atributo `color`. Utiliza `INT 10h` para posicionar e imprimir. |
 | `DRAW_BUTTON x, y, width, height, btn_color, text_row, text_col, text, text_color` | Dibuja un botón con fondo de color `btn_color` y borde blanco en `(x, y)` de tamaño `width x height`. Imprime texto `text` en modo texto en la posición `(text_row, text_col)` con color `text_color`. |
+ `CLEAR_SCREEN color` | Limpia toda la pantalla en modo texto con el color de fondo especificado. Utiliza `INT 10h, AH=06h`. |
+| `WAIT_KEY` | Espera hasta que se presione una tecla. Devuelve el código ASCII en AL y el código de exploración en AH (`INT 16h, AH=00h`). |
+| `SET_CURSOR_POS row, col` | Mueve el cursor a la posición `(row, col)` en modo texto. Usa `INT 10h, AH=02h`. |
+| `CHECK_KEY keycode, handler` | Verifica si una tecla con código ASCII `keycode` fue presionada. Si coincide, salta a la etiqueta `handler`. |
+| `COMPARE_FILA n, cadena` | Compara la fila `n` del arreglo `PALABRAS` con la cadena `cadena`. Retorna `AL=1` si son iguales, `AL=0` si no. |
+| `LEER_CADENA_ENTER etiqueta_buffer, maximo` | Lee caracteres del teclado hasta ENTER o alcanzar `maximo`. Guarda en `etiqueta_buffer` y termina con `$`. |
+| `LIMPIAR_BUFFER etiqueta, longitud` | Llena el buffer especificado (`etiqueta`) con el carácter `$`, hasta `longitud`. |
